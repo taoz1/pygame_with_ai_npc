@@ -6,7 +6,7 @@ export const npcs=[
  {id:'he',name:'何柏翰',role:'测试员 · 台湾朋友',x:136,y:286,color:'#9170a5',intro:'我还在看机会。这里不是我想象的那样，但也没简单到让我马上改变主意。',suggestions:['你会留下吗？','你觉得我们能融入吗？']}
 ];
 export const terminal={x:526,y:232,w:72,h:40,name:'异常控制柜'};
-export function createState(){return {player:{x:382,y:432,dir:'up'},quest:0,clues:0,belonging:5,met:[],inspected:false,notes:['来到榕海的第三个月。我仍告诉自己：这里只是暂时谋生的地方。'],memories:{}};}
+export function createState(){return {player:{x:322,y:432,dir:'up'},quest:0,clues:0,belonging:5,met:[],inspected:false,notes:['来到榕海的第三个月。我仍告诉自己：这里只是暂时谋生的地方。'],memories:{}};}
 export const quests=[
  {title:'入职第一天',copy:'找到维修师傅梁志成，确认今天的设备检查安排。'},
  {title:'试验表里的疑点',copy:'老梁没有否定你的判断。去研发区调查闪烁的异常控制柜。'},
