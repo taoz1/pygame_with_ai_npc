@@ -12,4 +12,4 @@ http.createServer(async(req,res)=>{try{
   }
   const file=files[url.pathname];if(!file){res.writeHead(404);res.end('Not found');return;}
   res.setHeader('Content-Type',mime[file.split('.').pop()]);res.end(await readFile(new URL('./dist/'+file,import.meta.url)));
-}catch{res.writeHead(500);res.end('Unable to load page');}}).listen(3000,'0.0.0.0',()=>console.log('NPC Observatory: http://localhost:3000'));
+}catch{res.writeHead(500);res.end('Unable to load page');}}).listen(3000,'0.0.0.0',()=>console.log('最后一班 RPG: http://localhost:3000'));
