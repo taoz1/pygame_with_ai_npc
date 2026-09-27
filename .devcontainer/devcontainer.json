@@ -1,0 +1,1 @@
+{"name":"NPC Observatory","image":"mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm","forwardPorts":[3000],"portsAttributes":{"3000":{"label":"NPC Observatory","onAutoForward":"openPreview"}},"postAttachCommand":"npm run dev"}
