@@ -1,1 +1,11 @@
-{"name":"npc-observatory","version":"0.1.0","private":true,"type":"module","scripts":{"dev":"node server.mjs","check":"node --check dist/app.js && node --check dist/engine.js"}}
+{
+  "name": "npc-observatory",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env server.mjs",
+    "check": "node --check dist/app.js && node --check dist/engine.js && node --check backend/deepseek.mjs && node --test tests/deepseek.test.mjs",
+    "build": "node scripts/build.mjs"
+  }
+}

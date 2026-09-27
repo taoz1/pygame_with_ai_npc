@@ -4,3 +4,26 @@ export function createWorld(){return {tick:8,event:'A quiet morning',agents:prof
 const clamp=n=>Math.max(0,Math.min(100,n));
 export function advance(w){w.tick++;const actions=[];w.agents.forEach(a=>{a.energy=clamp(a.energy-8);a.food=clamp(a.food-10);a.social=clamp(a.social-6);if(a.food<40){a.place=0;a.food=clamp(a.food+45);a.thought='I need a proper meal before anything else.';actions.push(`${a.name} visits the market for a meal.`);}else if(a.energy<30){a.place=1;a.energy=clamp(a.energy+45);a.thought='A quiet hour in the garden will help.';actions.push(`${a.name} rests in the garden.`);}else if(a.social<45){a.place=3;a.social=clamp(a.social+25);a.thought='I could use some company at the commons.';actions.push(`${a.name} heads to the commons to meet neighbors.`);}else{a.place=(a.place+1)%4;a.thought=a.goal;actions.push(`${a.name} explores the ${locations[a.place].toLowerCase()}.`);}});for(let i=0;i<4;i++)for(let j=i+1;j<4;j++){const a=w.agents[i],b=w.agents[j];if(a.place===b.place){a.bonds[b.name]=(a.bonds[b.name]||0)+1;b.bonds[a.name]=(b.bonds[a.name]||0)+1;const memory=`Shared an idea with ${b.name} at the ${locations[a.place].toLowerCase()}.`;a.memories.unshift(memory);b.memories.unshift(`Talked with ${a.name} about ${a.goal.toLowerCase()}`);a.memories=a.memories.slice(0,3);b.memories=b.memories.slice(0,3);actions.push(`${a.name} and ${b.name} exchange ideas. Their connection grows.`);}}w.log.unshift({tick:w.tick,text:actions.join(' ')});w.log=w.log.slice(0,40);return w;}
 export function intervene(w,event){if(!['rain','festival','shortage'].includes(event))throw new Error('Unknown event');const labels={rain:'Rain rolls in',festival:'Festival in the commons',shortage:'Food supplies run low'};w.event=labels[event];for(const a of w.agents){if(event==='rain'){a.place=2;a.energy=clamp(a.energy-12);a.thought='Shelter first. Who else is waiting out the rain?';}if(event==='festival'){a.place=3;a.social=clamp(a.social+25);a.food=clamp(a.food-15);a.thought='Everyone is gathering. I want to join in.';}if(event==='shortage'){a.food=clamp(a.food-40);a.thought='Food is running low. I should check the market.';}}w.log.unshift({tick:w.tick,text:labels[event]+'. The neighbors rethink their plans.'});w.log=w.log.slice(0,40);return w;}
+export function advanceAI(w, decisions) {
+  // Apply validated model choices to a copy so an invalid turn never partly mutates the world.
+  const next=structuredClone(w);next.tick++;const events=[];
+  next.agents.forEach(a=>{
+    const d=decisions.find(d=>d.name===a.name);
+    if(!d||!['eat','rest','socialize','work','explore'].includes(d.action))throw new Error('Invalid decision');
+    a.energy=clamp(a.energy-8);a.food=clamp(a.food-10);a.social=clamp(a.social-6);
+    if(d.action==='eat'){a.place=0;a.food=clamp(a.food+45);}
+    if(d.action==='rest'){a.place=1;a.energy=clamp(a.energy+45);}
+    if(d.action==='socialize'){a.place=3;a.social=clamp(a.social+25);}
+    if(d.action==='work')a.place=2;
+    if(d.action==='explore')a.place=(a.place+1)%4;
+    a.thought=d.thought;a.speech=d.speech;
+    events.push(`${a.name} → ${locations[a.place]} (${d.action}): “${d.speech}”`);
+  });
+  for(let i=0;i<4;i++)for(let j=i+1;j<4;j++){
+    const a=next.agents[i],b=next.agents[j];if(a.place!==b.place)continue;
+    a.bonds[b.name]=(a.bonds[b.name]||0)+1;b.bonds[a.name]=(b.bonds[a.name]||0)+1;
+    a.memories.unshift(`${b.name} at ${locations[a.place]}: ${b.speech}`);b.memories.unshift(`${a.name} at ${locations[a.place]}: ${a.speech}`);
+    a.memories=a.memories.slice(0,3);b.memories=b.memories.slice(0,3);
+  }
+  next.log.unshift({tick:next.tick,text:events.join(' ')});next.log=next.log.slice(0,40);return next;
+}

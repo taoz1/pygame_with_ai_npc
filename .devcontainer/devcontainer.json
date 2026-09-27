@@ -1,1 +1,19 @@
-{"name":"NPC Observatory","image":"mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm","forwardPorts":[3000],"portsAttributes":{"3000":{"label":"NPC Observatory","onAutoForward":"openPreview"}},"postAttachCommand":"npm run dev"}
+{
+  "name": "NPC Observatory",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "forwardPorts": [
+    3000
+  ],
+  "portsAttributes": {
+    "3000": {
+      "label": "NPC Observatory",
+      "onAutoForward": "openPreview"
+    }
+  },
+  "postAttachCommand": "npm run dev",
+  "secrets": {
+    "DEEPSEEK_API_KEY": {
+      "description": "DeepSeek API key for NPC decisions. Stored as a Codespaces secret; never committed."
+    }
+  }
+}
